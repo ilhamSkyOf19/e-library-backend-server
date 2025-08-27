@@ -1,15 +1,58 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model customer {
+  id_customer Int           @id
+  id_ebook    Int
+  name        String        @db.VarChar(100)
+  email       String        @db.VarChar(100)
+  username    String        @db.VarChar(100)
+  password    String        @db.VarChar(100)
+  ebook       ebook         @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "customer_ibfk_1")
+  transaction transaction[]
+
+  @@index([name, email, username, password], map: "Key")
+  @@index([id_ebook], map: "id_ebook")
+}
+
+model ebook {
+  id_ebook    Int           @id
+  id_genre    Int
+  name        String        @db.VarChar(100)
+  price       Int
+  stock       Int
+  about       String        @db.VarChar(100)
+  author      String        @db.VarChar(100)
+  customer    customer[]
+  genre       genre         @relation(fields: [id_genre], references: [id_genre], onDelete: Restrict, onUpdate: Restrict, map: "ebook_ibfk_1")
+  transaction transaction[]
+
+  @@index([name, price, stock, about, author], map: "Key")
+  @@index([id_genre], map: "id_genre")
+}
+
+model genre {
+  id_genre Int     @id
+  name     String  @db.VarChar(100)
+  ebook    ebook[]
+
+  @@index([name], map: "Key")
+}
+
+model transaction {
+  id_transaction Int      @id
+  id_customer    Int
+  id_ebook       Int
+  customer       customer @relation(fields: [id_customer], references: [id_customer], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_1")
+  ebook          ebook    @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_2")
+
+  @@index([id_customer], map: "id_customer")
+  @@index([id_ebook], map: "id_ebook")
 }
