@@ -33,6 +33,7 @@ model ebook {
   stock    Int
   about    String @db.VarChar(100)
   author   String @db.VarChar(100)
+  cover    String
 
   customers   customer[]    @relation("CustomerEbooks")
   genres      genre[]       @relation("GenreEbook")
