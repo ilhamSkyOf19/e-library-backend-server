@@ -7,7 +7,6 @@ export type EbookCreateRequestType = {
     stock: number;
     about: string;
     author: string;
-    cover: string;
     genres: number[];
 }
 
@@ -26,17 +25,17 @@ export type EbookResponseType = {
 
 
 // to response 
-export const toEbookResponse = (ebook: ebook & {
+export const toEbookResponse = (data: ebook & {
     genres: { id_genre: number }[]
 }): EbookResponseType => {
     return {
-        id_ebook: ebook.id_ebook,
-        name: ebook.name,
-        price: ebook.price,
-        stock: ebook.stock,
-        about: ebook.about,
-        author: ebook.author,
-        cover: ebook.cover,
-        genres: ebook.genres.map(g => g.id_genre),
+        id_ebook: data.id_ebook,
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+        about: data.about,
+        author: data.author,
+        cover: data.cover,
+        genres: data.genres.map(g => g.id_genre),
     }
 }

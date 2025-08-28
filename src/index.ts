@@ -5,6 +5,8 @@ dotenv.config();
 import express, { Request, Response } from 'express';
 import authRoute from './routes/auth.route';
 import cookieParser from 'cookie-parser';
+import ebookRoute from './routes/ebook.route';
+import prisma from './lib/prismaClient';
 
 
 // port 
@@ -24,12 +26,27 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // routes testing 
-app.get('/', (_req: Request, res: Response) => {
-    res.send('hello world');
+app.get('/', async (_req: Request, res: Response) => {
+    const ebookWithGenreNames = await prisma.ebook.findUnique({
+        where: { id_ebook: 6 },
+        select: {
+            id_ebook: true,
+            name: true,
+            genres: {
+                select: { name: true }
+            }
+        }
+    });
+
+    const genre: string[] | undefined = ebookWithGenreNames?.genres.map(genre => genre.name);
+
+    return res.status(200).json(genre);
 });
 
 // auth route
 app.use('/api/auth', authRoute);
+// ebook route 
+app.use('/api/ebook', ebookRoute);
 
 
 // listen 

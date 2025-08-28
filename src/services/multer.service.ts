@@ -9,7 +9,7 @@ export class MulterService {
     static uploadFileCover(): RequestHandler {
         const storage = multer.diskStorage({
             // destination
-            destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+            destination: (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
                 // folder uploads
                 const uploads: string = path.join(__dirname, '../public/uploads/cover');
                 // cek folder
@@ -22,16 +22,14 @@ export class MulterService {
             },
 
             // filename 
-            filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+            filename: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
                 // date
                 const date: number = Date.now();
                 // ext
                 const ext: string = path.extname(file.originalname);
-                // original name
-                const originalname: string = path.basename(file.originalname, ext);
 
                 // full name 
-                const newFileName: string = `cover-${date}-${originalname}${ext}`;
+                const newFileName: string = `cover-${date}${ext}`;
 
                 // callback
                 cb(null, newFileName);

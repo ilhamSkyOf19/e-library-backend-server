@@ -3,12 +3,14 @@ import { EbookCreateRequestType, EbookResponseType, toEbookResponse } from "../m
 
 export class EbookService {
     // create 
-    static async create(req: EbookCreateRequestType): Promise<EbookResponseType> {
+    static async create(req: EbookCreateRequestType, cover: string): Promise<EbookResponseType> {
+
         const response = await prisma.ebook.create({
             data: {
                 ...req,
+                cover: cover,
                 genres: {
-                    connect: req.genres.map(id => ({ id_genre: id }))
+                    connect: (req.genres || []).map(id => ({ id_genre: id }))
                 }
             },
             include: {

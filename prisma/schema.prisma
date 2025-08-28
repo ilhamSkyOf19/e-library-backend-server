@@ -13,21 +13,20 @@ enum Role {
   CUSTOMER
 }
 
-model customer {
-  id_customer Int           @id @default(autoincrement()) // auto-increment
-  name        String        @db.VarChar(100)
-  email       String        @unique @db.VarChar(100)
-  username    String        @unique @db.VarChar(100)
-  password    String        @db.VarChar(100)
-  role        Role          @default(CUSTOMER)
-  ebooks      ebook[]       @relation("CustomerEbooks")
-  transaction transaction[]
+model Customer {
+  id_customer Int    @id @default(autoincrement())
+  name        String @db.VarChar(100)
+  email       String @unique @db.VarChar(100)
+  username    String @unique @db.VarChar(100)
+  password    String @db.VarChar(100)
+  role        Role   @default(CUSTOMER)
 
-  @@index([name, email, username, password], map: "Key")
+  // relasi ke Transaction
+  transactions Transaction[]
 }
 
-model ebook {
-  id_ebook Int    @id @default(autoincrement()) // auto-increment
+model Ebook {
+  id_ebook Int    @id @default(autoincrement())
   name     String @db.VarChar(100)
   price    Int
   stock    Int
@@ -35,20 +34,29 @@ model ebook {
   author   String @db.VarChar(100)
   cover    String
 
-  customers   customer[]    @relation("CustomerEbooks")
-  genres      genre[]       @relation("GenreEbook")
-  transaction transaction[]
+  // relasi ke Transaction
+  transactions Transaction[]
 
-  @@index([name, price, stock, about, author], map: "Key")
+  // relasi explicit ke Genre lewat pivot
+  ebookGenres EbookGenre[]
 }
 
-model genre {
-  id_genre Int    @id @default(autoincrement()) // auto-increment
+model Genre {
+  id_genre Int    @id @default(autoincrement())
   name     String @db.VarChar(100)
 
-  ebooks ebook[] @relation("GenreEbook")
+  // relasi explicit ke Ebook lewat pivot
+  ebookGenres EbookGenre[]
+}
 
-  @@index([name], map: "Key")
+model EbookGenre {
+  id_ebook Int
+  id_genre Int
+
+  ebook Ebook @relation(fields: [id_ebook], references: [id_ebook], onDelete: Cascade)
+  genre Genre @relation(fields: [id_genre], references: [id_genre], onDelete: Cascade)
+
+  @@id([id_ebook, id_genre])
 }
 
 enum Status {
@@ -57,19 +65,20 @@ enum Status {
   CANCELLED
 }
 
-model transaction {
-  id_transaction Int      @id @default(autoincrement()) // auto-increment
+model Transaction {
+  id_transaction Int    @id @default(autoincrement())
   id_customer    Int
   id_ebook       Int
-  status         Status   @default(PENDING)
-  customer       customer @relation(fields: [id_customer], references: [id_customer], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_1")
-  ebook          ebook    @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_2")
+  status         Status @default(PENDING)
 
-  @@index([id_customer], map: "id_customer")
-  @@index([id_ebook], map: "id_ebook")
+  customer Customer @relation(fields: [id_customer], references: [id_customer], onDelete: Restrict, onUpdate: Restrict)
+  ebook    Ebook    @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([id_customer], map: "idx_transaction_customer")
+  @@index([id_ebook], map: "idx_transaction_ebook")
 }
 
-model admin {
+model Admin {
   id       Int    @id @default(autoincrement())
   name     String
   email    String @unique

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { validationMiddleware } from '../middlewares/validation-middleware';
 import { CustomerValidation } from '../validation/customer-validation';
 import { CustomerController } from '../controllers/customer.controller';
@@ -6,7 +6,7 @@ import { AdminController } from '../controllers/admin.controller';
 import { AdminValidation } from '../validation/admin-validation';
 
 
-const authRoute = express.Router();
+const authRoute: Router = express.Router();
 
 // sign up
 authRoute.post('/sign-up',
