@@ -8,13 +8,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
 model customer {
-  id_customer Int           @id
+  id_customer Int           @id @default(autoincrement()) // auto-increment
   id_ebook    Int
   name        String        @db.VarChar(100)
-  email       String        @db.VarChar(100)
-  username    String        @db.VarChar(100)
+  email       String        @unique @db.VarChar(100)
+  username    String        @unique @db.VarChar(100)
   password    String        @db.VarChar(100)
+  role        Role          @default(CUSTOMER)
   ebook       ebook         @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "customer_ibfk_1")
   transaction transaction[]
 
@@ -23,7 +29,7 @@ model customer {
 }
 
 model ebook {
-  id_ebook    Int           @id
+  id_ebook    Int           @id @default(autoincrement()) // auto-increment
   id_genre    Int
   name        String        @db.VarChar(100)
   price       Int
@@ -39,20 +45,34 @@ model ebook {
 }
 
 model genre {
-  id_genre Int     @id
+  id_genre Int     @id @default(autoincrement()) // auto-increment
   name     String  @db.VarChar(100)
   ebook    ebook[]
 
   @@index([name], map: "Key")
 }
 
+enum Status {
+  PENDING
+  SUCCESS
+  CANCELLED
+}
+
 model transaction {
-  id_transaction Int      @id
+  id_transaction Int      @id @default(autoincrement()) // auto-increment
   id_customer    Int
   id_ebook       Int
+  status         Status   @default(PENDING)
   customer       customer @relation(fields: [id_customer], references: [id_customer], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_1")
   ebook          ebook    @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "transaction_ibfk_2")
 
   @@index([id_customer], map: "id_customer")
   @@index([id_ebook], map: "id_ebook")
+}
+
+model admin {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+  role  Role   @default(ADMIN)
 }
