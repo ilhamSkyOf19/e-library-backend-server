@@ -15,39 +15,37 @@ enum Role {
 
 model customer {
   id_customer Int           @id @default(autoincrement()) // auto-increment
-  id_ebook    Int
   name        String        @db.VarChar(100)
   email       String        @unique @db.VarChar(100)
   username    String        @unique @db.VarChar(100)
   password    String        @db.VarChar(100)
   role        Role          @default(CUSTOMER)
-  ebook       ebook         @relation(fields: [id_ebook], references: [id_ebook], onDelete: Restrict, onUpdate: Restrict, map: "customer_ibfk_1")
+  ebooks      ebook[]       @relation("CustomerEbooks")
   transaction transaction[]
 
   @@index([name, email, username, password], map: "Key")
-  @@index([id_ebook], map: "id_ebook")
 }
 
 model ebook {
-  id_ebook    Int           @id @default(autoincrement()) // auto-increment
-  id_genre    Int
-  name        String        @db.VarChar(100)
-  price       Int
-  stock       Int
-  about       String        @db.VarChar(100)
-  author      String        @db.VarChar(100)
-  customer    customer[]
-  genre       genre         @relation(fields: [id_genre], references: [id_genre], onDelete: Restrict, onUpdate: Restrict, map: "ebook_ibfk_1")
+  id_ebook Int    @id @default(autoincrement()) // auto-increment
+  name     String @db.VarChar(100)
+  price    Int
+  stock    Int
+  about    String @db.VarChar(100)
+  author   String @db.VarChar(100)
+
+  customers   customer[]    @relation("CustomerEbooks")
+  genres      genre[]       @relation("GenreEbook")
   transaction transaction[]
 
   @@index([name, price, stock, about, author], map: "Key")
-  @@index([id_genre], map: "id_genre")
 }
 
 model genre {
-  id_genre Int     @id @default(autoincrement()) // auto-increment
-  name     String  @db.VarChar(100)
-  ebook    ebook[]
+  id_genre Int    @id @default(autoincrement()) // auto-increment
+  name     String @db.VarChar(100)
+
+  ebooks ebook[] @relation("GenreEbook")
 
   @@index([name], map: "Key")
 }
