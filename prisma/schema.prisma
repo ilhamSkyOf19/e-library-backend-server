@@ -69,8 +69,9 @@ model transaction {
 }
 
 model admin {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
-  role  Role   @default(ADMIN)
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(ADMIN)
 }

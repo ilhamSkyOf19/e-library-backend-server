@@ -1,3 +1,4 @@
+import { AdminCreateRequestType } from "../models/admin-model";
 import { CustomerLoginRequestType, CustomerLoginResponseType } from "../models/customer-model";
 import { CustomerService } from "./customer.service";
 import bcrypt from "bcrypt";
@@ -36,4 +37,5 @@ export class AuthService {
         return { success: true, token };
 
     }
+
 }
