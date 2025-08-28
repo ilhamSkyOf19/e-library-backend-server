@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { ResponseType } from "../types/response-type";
-import { CustomerCreateRequestType, CustomerResponseType } from "../models/customer-model";
+import { CustomerCreateRequestType, CustomerLoginRequestType, CustomerResponseType } from "../models/customer-model";
 import { CustomerService } from "../services/customer.service";
 import { PrismaClient } from "../generated/prisma";
 import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/library";
+import { AuthService } from "../services/auth.service";
 
 
 export class CustomerController {
@@ -46,10 +47,45 @@ export class CustomerController {
                 message: "Internal Server Error"
             });
         }
+    }
+
+    // sign in 
+    static async login(req: Request<{}, {}, CustomerLoginRequestType>, res: Response<ResponseType<{ message: string }>>) {
+        try {
+            // get body
+            const body = req.body;
+
+            // login 
+            const response = await AuthService.login(body);
+
+            // cek response
+            if (!response.success) {
+                return res.status(400).json({
+                    success: false,
+                    message: response.message
+                })
+            }
+
+            // set cookie
+            res.cookie('token', response.token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 60 * 60 * 1000 // 1 hour
+            });
 
 
+            return res.status(200).json({
+                success: true,
+                message: "Login Success"
+            })
 
 
-
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
+        }
     }
 }

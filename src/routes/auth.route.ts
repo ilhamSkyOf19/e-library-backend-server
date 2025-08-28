@@ -12,5 +12,11 @@ authRoute.post('/signup',
     CustomerController.signup
 );
 
+// sign in
+authRoute.post('/signin',
+    validationMiddleware(CustomerValidation.LOGIN),
+    CustomerController.login
+);
+
 
 export default authRoute;

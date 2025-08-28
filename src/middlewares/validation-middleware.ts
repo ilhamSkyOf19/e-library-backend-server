@@ -9,7 +9,6 @@ export const validationMiddleware = (schema: ZodType) => {
             schema.parse(req.body);
             next();
         } catch (error) {
-            console.log(error);
             // cek errors
             if (error instanceof ZodError) {
                 const errorMessages = error.issues.map((err) => err.message)[0];

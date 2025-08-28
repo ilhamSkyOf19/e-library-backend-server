@@ -9,6 +9,21 @@ export type CustomerCreateRequestType = {
 }
 
 
+// customer login 
+export type CustomerLoginRequestType = {
+    email: string;
+    password: string;
+}
+
+
+export type CustomerLoginResponseType = {
+    id: number;
+    name: string;
+    email: string;
+    username: string;
+    role: 'CUSTOMER';
+}
+
 
 // response 
 export type CustomerResponseType = {

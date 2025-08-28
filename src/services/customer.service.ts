@@ -26,4 +26,9 @@ export class CustomerService {
     static async findUsername(username: string): Promise<customer | null> {
         return await prisma.customer.findUnique({ where: { username } });
     }
+
+    // find email 
+    static async findEmail(email: string): Promise<customer | null> {
+        return await prisma.customer.findUnique({ where: { email } });
+    }
 }
