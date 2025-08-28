@@ -7,6 +7,22 @@ export type AdminCreateRequestType = {
     password: string
 }
 
+
+// admin sign in 
+export type AdminSigninRequestType = {
+    email: string,
+    password: string
+}
+
+// response raw 
+export type AdminRawResponseType = {
+    id: number,
+    name: string,
+    email: string,
+    password: string,
+    role: 'ADMIN' | 'CUSTOMER'
+}
+
 // response 
 export type AdminResponseType = {
     id: number,

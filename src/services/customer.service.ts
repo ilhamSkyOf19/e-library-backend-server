@@ -1,7 +1,7 @@
 import { customer } from "../generated/prisma";
 import prisma from "../lib/prismaClient";
 import bcrypt from "bcrypt";
-import { CustomerCreateRequestType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
+import { CustomerCreateRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
 
 export class CustomerService {
     // create 
@@ -23,12 +23,12 @@ export class CustomerService {
     }
 
     // find username 
-    static async findUsername(username: string): Promise<customer | null> {
+    static async findUsername(username: string): Promise<CustomerRawResponseType | null> {
         return await prisma.customer.findUnique({ where: { username } });
     }
 
     // find email 
-    static async findEmail(email: string): Promise<customer | null> {
+    static async findEmail(email: string): Promise<CustomerRawResponseType | null> {
         return await prisma.customer.findUnique({ where: { email } });
     }
 }

@@ -1,5 +1,6 @@
+import { admin } from "../generated/prisma";
 import prisma from "../lib/prismaClient";
-import { AdminCreateRequestType, AdminResponseType, toAdminResponse } from "../models/admin-model";
+import { AdminCreateRequestType, AdminRawResponseType, AdminResponseType, toAdminResponse } from "../models/admin-model";
 import bcrypt from "bcrypt";
 
 export class AdminService {
@@ -16,5 +17,10 @@ export class AdminService {
         });
 
         return toAdminResponse(response);
+    }
+
+    // cek email 
+    static async findEmail(email: string): Promise<AdminRawResponseType | null> {
+        return await prisma.admin.findUnique({ where: { email } });
     }
 }

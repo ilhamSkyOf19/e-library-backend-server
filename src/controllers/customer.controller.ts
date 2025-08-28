@@ -76,7 +76,9 @@ export class CustomerController {
 
             return res.status(200).json({
                 success: true,
-                message: "Login Success"
+                data: {
+                    message: "Login succes"
+                }
             })
 
 

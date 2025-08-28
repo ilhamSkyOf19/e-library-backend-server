@@ -28,4 +28,11 @@ authRoute.post('/admin/sign-up',
 );
 
 
+// sing up admin
+authRoute.post('/admin/sign-in',
+    validationMiddleware(AdminValidation.SIGNIN),
+    AdminController.signin
+);
+
+
 export default authRoute;

@@ -1,4 +1,4 @@
-import { customer } from "../generated/prisma";
+import { customer, type Role } from "../generated/prisma";
 
 // create request 
 export type CustomerCreateRequestType = {
@@ -13,6 +13,16 @@ export type CustomerCreateRequestType = {
 export type CustomerLoginRequestType = {
     email: string;
     password: string;
+}
+
+// customer response raw 
+export type CustomerRawResponseType = {
+    id_customer: number;
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+    role: 'CUSTOMER' | 'ADMIN';
 }
 
 
