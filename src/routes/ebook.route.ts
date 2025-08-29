@@ -8,6 +8,7 @@ import { EbookController } from '../controllers/ebook.controller';
 // route 
 const ebookRoute: Router = express.Router();
 
-ebookRoute.post('/add-ebook', tokenMiddleware, MulterService.uploadFileCover(), EbookController.create)
+// add ebook
+ebookRoute.post('/add-ebook', tokenMiddleware('admin'), MulterService.uploadFileCover(), EbookController.create)
 
 export default ebookRoute

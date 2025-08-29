@@ -7,7 +7,7 @@ import { PaymentValidation } from "../validation/payment-validation";
 const paymentRoutes: Router = express.Router();
 
 // create
-paymentRoutes.post('/payment', tokenMiddleware, validationMiddleware(PaymentValidation.CREATE), paymentController)
+paymentRoutes.post('/payment', tokenMiddleware('customer'), validationMiddleware(PaymentValidation.CREATE), paymentController)
 
 
 // handle after payment 
