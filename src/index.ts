@@ -6,7 +6,6 @@ import express, { Request, Response } from 'express';
 import authRoute from './routes/auth.route';
 import cookieParser from 'cookie-parser';
 import ebookRoute from './routes/ebook.route';
-import prisma from './lib/prismaClient';
 import paymentRoutes from './routes/payment.route';
 
 
@@ -27,9 +26,15 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // routes testing 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_: Request, res: Response) => {
     res.send('Hello World!');
 });
+
+
+// success
+app.get('/api/payment/succes', (_: Request, res: Response) => {
+    res.send('Success!');
+})
 
 // auth route
 app.use('/api/auth', authRoute);

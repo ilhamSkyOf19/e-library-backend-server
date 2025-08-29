@@ -1,6 +1,5 @@
 // request midtrans
 export type TransactionRequestType = {
-    id_user: number;
     id_ebook: number;
 }
 
@@ -18,15 +17,6 @@ export type MidtransUrl = {
     redirect_url: string
 }
 
-
-// midtrans response
-export type MidtransHook = {
-    transaction_status: string;
-    transaction_id: string;
-    transaction_time: string;
-    order_id: string;
-    gross_amount: string;
-}
 
 
 // transaction db response 

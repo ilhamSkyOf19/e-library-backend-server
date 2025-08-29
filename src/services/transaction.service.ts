@@ -60,7 +60,36 @@ export class TransactionService {
         if (!response.ok) throw new Error(`Failed to create transaction, status: ${response.status}`);
 
         // return response
-        return response.json()
+        return response.json() as Promise<MidtransUrl>;
 
     }
+
+    // update status
+    static async updateStatus(order_id: number, status: 'PENDING' | 'SUCCESS' | 'CANCELLED') {
+        // cek transaction 
+        const transaction = await prisma.transaction.findUnique({
+            where: {
+                id_transaction: order_id
+            }
+        })
+
+        // handle error
+        if (!transaction) throw new Error("Transaction not found")
+
+
+        // update & return
+        return await prisma.transaction.update({
+            where: {
+                id_transaction: order_id
+            },
+            data: {
+                status: status
+            }
+        })
+
+
+    }
+
+
+
 }
