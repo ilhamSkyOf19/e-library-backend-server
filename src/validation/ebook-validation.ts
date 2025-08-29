@@ -1,4 +1,4 @@
-import z, { ZodType } from "zod";
+import z, { email, ZodType } from "zod";
 import { EbookCreateRequestType } from "../models/ebook-model";
 
 export class EbookValidation {
@@ -11,4 +11,5 @@ export class EbookValidation {
         author: z.string().min(3, "author is required"),
         genres: z.array(z.number()).min(1, "genres is required"),
     }).strict()
+
 }

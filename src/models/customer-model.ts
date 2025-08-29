@@ -9,6 +9,14 @@ export type CustomerCreateRequestType = {
 }
 
 
+// edit request 
+export type CustomerEditRequestType = {
+    name?: string;
+    email?: string;
+    username?: string;
+}
+
+
 // customer login 
 export type CustomerLoginRequestType = {
     email: string;

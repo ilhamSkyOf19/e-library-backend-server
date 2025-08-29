@@ -7,6 +7,7 @@ import authRoute from './routes/auth.route';
 import cookieParser from 'cookie-parser';
 import ebookRoute from './routes/ebook.route';
 import paymentRoutes from './routes/payment.route';
+import customerRoute from './routes/customer.route';
 
 
 // port 
@@ -43,6 +44,10 @@ app.use('/api/ebook', ebookRoute);
 
 // payment route
 app.use('/api', paymentRoutes);
+
+
+// customer edit 
+app.use('/api/customer', customerRoute);
 
 
 // listen 

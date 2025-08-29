@@ -1,6 +1,6 @@
 import prisma from "../lib/prismaClient";
 import bcrypt from "bcrypt";
-import { CustomerCreateRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
+import { CustomerCreateRequestType, CustomerEditRequestType, CustomerLoginRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
 
 export class CustomerService {
     // create 
@@ -29,5 +29,34 @@ export class CustomerService {
     // find email 
     static async findEmail(email: string): Promise<CustomerRawResponseType | null> {
         return await prisma.customer.findUnique({ where: { email } });
+    }
+
+
+    // find user by id
+    static async findById(id: number): Promise<CustomerRawResponseType | null> {
+        return await prisma.customer.findUnique({ where: { id_customer: id } });
+    }
+
+
+    // edit 
+    static async edit(id: number, req: CustomerEditRequestType): Promise<{ success: boolean; message: string }> {
+        // cek user
+        const findCustomer = await this.findById(id);
+
+        if (!findCustomer) {
+            return { success: false, message: "customer not found" };
+        }
+
+        // update customer
+        await prisma.customer.update({
+            where: { id_customer: id },
+            data: {
+                name: req.name?.trim() ? req.name.trim() : undefined,
+                email: req.email?.trim() ? req.email.trim() : undefined,
+                username: req.username?.trim() ? req.username.trim() : undefined,
+            }
+        });
+
+        return { success: true, message: "customer updated successfully" };
     }
 }

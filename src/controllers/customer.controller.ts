@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ResponseType } from "../types/response-type";
-import { CustomerCreateRequestType, CustomerLoginRequestType, CustomerResponseType } from "../models/customer-model";
+import { CustomerCreateRequestType, CustomerEditRequestType, CustomerLoginRequestType, CustomerResponseType } from "../models/customer-model";
 import { CustomerService } from "../services/customer.service";
 import { PrismaClient } from "../generated/prisma";
 import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/library";
@@ -82,6 +82,42 @@ export class CustomerController {
             })
 
 
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
+        }
+    }
+
+
+    // update 
+    static async edit(req: Request<{ id: string }, {}, CustomerEditRequestType>, res: Response<ResponseType<{ message: string }>>) {
+        try {
+            // get body 
+            const body = req.body;
+            // get params 
+            const id = Number(req.params.id);
+
+
+            // update customer 
+            const response = await CustomerService.edit(id, body);
+
+            // cek response
+            if (!response.success) {
+                return res.status(400).json({
+                    success: false,
+                    message: response.message
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    message: response.message
+                }
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).json({
