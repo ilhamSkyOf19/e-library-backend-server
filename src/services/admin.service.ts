@@ -1,4 +1,3 @@
-import { admin } from "../generated/prisma";
 import prisma from "../lib/prismaClient";
 import { AdminCreateRequestType, AdminRawResponseType, AdminResponseType, toAdminResponse } from "../models/admin-model";
 import bcrypt from "bcrypt";

@@ -1,4 +1,4 @@
-import { admin } from "../generated/prisma"
+import { Admin } from "../generated/prisma"
 
 // create 
 export type AdminCreateRequestType = {
@@ -33,7 +33,7 @@ export type AdminResponseType = {
 
 
 // to response 
-export const toAdminResponse = (admin: admin): AdminResponseType => {
+export const toAdminResponse = (admin: Admin): AdminResponseType => {
     return {
         id: admin.id,
         name: admin.name,

@@ -21,7 +21,7 @@ export const tokenMiddleware: RequestHandler = (
         const payload = jwt.verify(token, process.env.JWT_SECRET || "") as JwtPayloadGlobal;
 
         // cek payload
-        if (payload.role !== "ADMIN") return res.status(401).json({ success: false, message: "Unauthorized" });
+        if (payload.role !== "CUSTOMER") return res.status(401).json({ success: false, message: "Unauthorized" });
 
 
         // set req user 

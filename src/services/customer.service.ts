@@ -1,4 +1,3 @@
-import { customer } from "../generated/prisma";
 import prisma from "../lib/prismaClient";
 import bcrypt from "bcrypt";
 import { CustomerCreateRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";

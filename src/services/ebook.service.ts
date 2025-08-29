@@ -1,5 +1,6 @@
+import { includes } from "zod";
 import prisma from "../lib/prismaClient";
-import { EbookCreateRequestType, EbookResponseType, toEbookResponse } from "../models/ebook-model";
+import { EbookCreateRequestType, EbookResponseDataType, EbookResponseType, toEbookResponse, toResponseEbookData } from "../models/ebook-model";
 
 export class EbookService {
     // create 
@@ -7,14 +8,22 @@ export class EbookService {
 
         const response = await prisma.ebook.create({
             data: {
-                ...req,
+                name: req.name,
+                price: req.price,
+                stock: req.stock,
+                about: req.about,
+                author: req.author,
                 cover: cover,
-                genres: {
-                    connect: (req.genres || []).map(id => ({ id_genre: id }))
+                ebookGenres: {
+                    create: req.genres.map(id_genre => ({
+                        genre: { connect: { id_genre } }
+                    }))
                 }
             },
             include: {
-                genres: true
+                ebookGenres: {
+                    include: { genre: true } // ambil detail genre
+                }
             }
         });
 
@@ -23,4 +32,21 @@ export class EbookService {
 
         return toEbookResponse(response);
     }
+
+    // get 
+    static async getData(id_ebook: number): Promise<EbookResponseDataType> {
+        const response = await prisma.ebook.findUnique({
+            where: { id_ebook: id_ebook },
+            include: {
+                ebookGenres: {
+                    include: { genre: true }
+                }
+            }
+        });
+
+        if (!response) throw new Error("Ebook not found");
+
+        return toResponseEbookData(response);
+    }
+
 }

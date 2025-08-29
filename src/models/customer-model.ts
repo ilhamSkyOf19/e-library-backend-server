@@ -1,4 +1,4 @@
-import { customer, type Role } from "../generated/prisma";
+import { Customer } from "../generated/prisma";
 
 // create request 
 export type CustomerCreateRequestType = {
@@ -47,7 +47,7 @@ export type CustomerResponseType = {
 
 
 // to response
-export const toCustomerResponse = (customer: customer & { ebooks?: { id_ebook: number }[] }): CustomerResponseType => {
+export const toCustomerResponse = (customer: Customer & { ebooks?: { id_ebook: number }[] }): CustomerResponseType => {
     return {
         id: customer.id_customer,
         name: customer.name,

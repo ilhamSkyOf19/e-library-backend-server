@@ -1,4 +1,4 @@
-import { ebook } from "../generated/prisma";
+import { Ebook } from "../generated/prisma";
 
 // create 
 export type EbookCreateRequestType = {
@@ -24,9 +24,11 @@ export type EbookResponseType = {
 }
 
 
+
+
 // to response 
-export const toEbookResponse = (data: ebook & {
-    genres: { id_genre: number }[]
+export const toEbookResponse = (data: Ebook & {
+    ebookGenres: { genre: { id_genre: number; name: string } }[]
 }): EbookResponseType => {
     return {
         id_ebook: data.id_ebook,
@@ -36,6 +38,35 @@ export const toEbookResponse = (data: ebook & {
         about: data.about,
         author: data.author,
         cover: data.cover,
-        genres: data.genres.map(g => g.id_genre),
+        genres: data.ebookGenres.map(eg => eg.genre.id_genre), // ambil id genre
     }
 }
+
+
+
+// ebook response data with genres
+export type EbookResponseDataType = {
+    id_ebook: number;
+    name: string;
+    price: number;
+    stock: number;
+    about: string;
+    author: string;
+    cover: string;
+    genres: string[]
+}
+
+// to ebook response data with genres 
+export const toResponseEbookData = (data: Ebook & {
+    ebookGenres: { genre: { name: string } }[]
+}) => ({
+    id_ebook: data.id_ebook,
+    name: data.name,
+    price: data.price,
+    stock: data.stock,
+    about: data.about,
+    author: data.author,
+    cover: data.cover,
+    genres: data.ebookGenres.map(eg => eg.genre.name)
+});
+
