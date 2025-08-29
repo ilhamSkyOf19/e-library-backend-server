@@ -60,7 +60,7 @@ export class TransactionService {
         if (!response.ok) throw new Error(`Failed to create transaction, status: ${response.status}`);
 
         // return response
-        return response.json() as Promise<MidtransUrl>;
+        return response.json()
 
     }
 
