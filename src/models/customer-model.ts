@@ -17,6 +17,14 @@ export type CustomerEditRequestType = {
 }
 
 
+// exit passwrod 
+export type CustomerEditPasswordRequestType = {
+    passwordOld: string;
+    passwordNew: string;
+    confirmPasswordNew: string;
+}
+
+
 // customer login 
 export type CustomerLoginRequestType = {
     email: string;

@@ -47,6 +47,14 @@ export class CustomerService {
             return { success: false, message: "customer not found" };
         }
 
+        //  cek email
+        if (req.email === findCustomer.email) {
+            return {
+                success: false,
+                message: "email has already been registered"
+            }
+        }
+
         // update customer
         await prisma.customer.update({
             where: { id_customer: id },
@@ -58,5 +66,20 @@ export class CustomerService {
         });
 
         return { success: true, message: "customer updated successfully" };
+    }
+
+    // update password 
+    static async editPassword(id: number, passwordNew: string) {
+        // password hashing
+        const hashedPassword = await bcrypt.hash(passwordNew, 10);
+        // update password
+        return await prisma.customer.update({
+            where: {
+                id_customer: id
+            },
+            data: {
+                password: hashedPassword
+            }
+        })
     }
 }

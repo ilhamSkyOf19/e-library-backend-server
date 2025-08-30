@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import ebookRoute from './routes/ebook.route';
 import paymentRoutes from './routes/payment.route';
 import customerRoute from './routes/customer.route';
+import { errorDbHandler } from './middlewares/error-db';
 
 
 // port 
@@ -22,6 +23,7 @@ const app = express();
 app.use(cookieParser());
 // json 
 app.use(express.json());
+
 // parsing application/x-www-form-urlencoded dan form-data
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,8 +41,10 @@ app.get('/api/payment/succes', (_: Request, res: Response) => {
 
 // auth route
 app.use('/api/auth', authRoute);
+
 // ebook route 
 app.use('/api/ebook', ebookRoute);
+
 
 // payment route
 app.use('/api', paymentRoutes);
@@ -49,6 +53,10 @@ app.use('/api', paymentRoutes);
 // customer edit 
 app.use('/api/customer', customerRoute);
 
+
+
+// error prisma 
+app.use(errorDbHandler)
 
 // listen 
 app.listen(PORT, () => {

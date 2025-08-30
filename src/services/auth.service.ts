@@ -68,4 +68,9 @@ export class AuthService {
 
     }
 
+    // password match
+    static async passwordMatch(passwordPlain: string, passwordHash: string): Promise<boolean> {
+        return await bcrypt.compare(passwordPlain, passwordHash);
+    }
+
 }
