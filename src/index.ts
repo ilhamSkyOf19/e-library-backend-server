@@ -11,6 +11,7 @@ import customerRoute from './routes/customer.route';
 import { errorDbHandler } from './middlewares/error-db';
 import { EbookController } from './controllers/ebook.controller';
 import { EbookService } from './services/ebook.service';
+import genreRouter from './routes/genre.route';
 
 
 // port 
@@ -37,7 +38,7 @@ app.get('/', (_: Request, res: Response) => {
 
 // get ebook
 app.get('/api/ebook', async (_: Request, res: Response) => {
-    const response = await EbookService.getData(1);
+    const response = await EbookService.getData(2);
 
     return res.status(200).json({
         success: true,
@@ -64,6 +65,10 @@ app.use('/api', paymentRoutes);
 
 // customer edit 
 app.use('/api/customer', customerRoute);
+
+
+// genre
+app.use('/api', genreRouter);
 
 
 

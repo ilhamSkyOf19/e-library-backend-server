@@ -5,6 +5,12 @@ export const errorDbHandler = (err: PrismaClientKnownRequestError, req: Request,
 
     if (err instanceof PrismaClientKnownRequestError) {
         switch (err.code) {
+            case "P2025":
+                return res.status(404).json({
+                    success: false,
+                    message: "record not found"
+                });
+                break;
             case "P2002":
                 return res.status(409).json({
                     success: false,
