@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { EbookCreateRequestType, EbookResponseType } from "../models/ebook-model";
+import { Response, Request } from "express";
+import { EbookCreateRequestType, EbookResponseType, type EbookUpdateRequestType } from "../models/ebook-model";
 import { TokenRequest } from "../types/jwt-type";
 import { ResponseType } from "../types/response-type";
 import { EbookService } from "../services/ebook.service";
@@ -27,33 +27,16 @@ export class EbookController {
 
             // genres array 
             const genresArray = JSON.parse(req.body.genres.toString());
-
-
-            // cek genre 
-            const findGenre = await prisma.genre.findMany({
-                where: {
-                    id_genre: {
-                        in: genresArray
-                    }
-                }
-            })
-
-            if (findGenre.length !== genresArray.length) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Genre not found"
-                })
-            }
-
             // price number 
             req.body.price = Number(req.body.price);
             // stock number
             req.body.stock = Number(req.body.stock);
 
-
             // cek validation 
             const body = validationService<EbookCreateRequestType>(EbookValidation.CREATE, { ...req.body, genres: genresArray });
 
+
+            // cek validation
             if (!body.success) {
                 // cek file and delete 
                 if (req.file) {
@@ -67,6 +50,22 @@ export class EbookController {
             }
 
 
+            // cek genre 
+            const findGenre = await prisma.genre.findMany({
+                where: {
+                    id_genre: {
+                        in: body.data.genres
+                    }
+                }
+            })
+
+            if (findGenre.length !== (genresArray?.length ?? 0)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Genre not found"
+                })
+            }
+
             // get add
             const response = await EbookService.create(body.data, req.file?.filename ?? "");
 
@@ -77,6 +76,86 @@ export class EbookController {
                 data: response
             })
 
+
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
+
+    // update 
+    static async update(req: Request<{ id: string }, {}, EbookUpdateRequestType>, res: Response) {
+        try {
+            if (!req.body && !req.file) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Bad Request"
+                });
+            }
+
+            console.log("req.body", req.body.genres);
+            // get id params 
+            const { id } = req.params;
+            // genres array 
+            const genresArray = req.body.genres ? JSON.parse(req.body.genres.toString()) : undefined;
+            req.body.price = req.body.price !== undefined ? Number(req.body.price) : undefined;
+            req.body.stock = req.body.stock !== undefined ? Number(req.body.stock) : undefined;
+
+
+            // cek validation 
+            const body = validationService<EbookUpdateRequestType>(EbookValidation.UPDATE, { ...req.body, genres: genresArray });
+
+            // cek validation
+            if (!body.success) {
+                // cek file and delete 
+                if (req.file) {
+                    await FileService.deleteFile(req.file?.path)
+                }
+
+                return res.status(400).json({
+                    success: false,
+                    message: body.message
+                })
+            }
+
+
+            // cek genres
+            if (body.data.genres && genresArray) {
+                // cek genre 
+                const findGenre = await prisma.genre.findMany({
+                    where: {
+                        id_genre: {
+                            in: body.data.genres
+                        }
+                    }
+                })
+
+                if (findGenre.length !== genresArray.length) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Genre not found"
+                    })
+                }
+            }
+
+
+
+
+
+
+            // update 
+            const response = await EbookService.update(body.data, req.file?.filename, Number(id));
+
+
+            return res.status(200).json({
+                success: true,
+                data: response
+            })
 
 
         } catch (error) {

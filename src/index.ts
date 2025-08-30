@@ -9,6 +9,8 @@ import ebookRoute from './routes/ebook.route';
 import paymentRoutes from './routes/payment.route';
 import customerRoute from './routes/customer.route';
 import { errorDbHandler } from './middlewares/error-db';
+import { EbookController } from './controllers/ebook.controller';
+import { EbookService } from './services/ebook.service';
 
 
 // port 
@@ -32,6 +34,16 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (_: Request, res: Response) => {
     res.send('Hello World!');
 });
+
+// get ebook
+app.get('/api/ebook', async (_: Request, res: Response) => {
+    const response = await EbookService.getData(1);
+
+    return res.status(200).json({
+        success: true,
+        data: response
+    });
+})
 
 
 // success

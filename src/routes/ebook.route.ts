@@ -10,4 +10,6 @@ const ebookRoute: Router = express.Router();
 // add ebook
 ebookRoute.post('/add-ebook', tokenMiddleware('admin'), MulterService.uploadFileCover(), EbookController.create)
 
+// update ebook
+ebookRoute.patch('/update-ebook/:id', tokenMiddleware('admin'), MulterService.uploadFileCover(), EbookController.update)
 export default ebookRoute

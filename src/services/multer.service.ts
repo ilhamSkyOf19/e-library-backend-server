@@ -11,7 +11,7 @@ export class MulterService {
             // destination
             destination: (_req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
                 // folder uploads
-                const uploads: string = path.join(__dirname, '../public/uploads/cover');
+                const uploads: string = path.join(__dirname, '../../public/uploads/cover');
                 // cek folder
                 if (!fs.existsSync(uploads)) {
                     fs.mkdirSync(uploads, { recursive: true });

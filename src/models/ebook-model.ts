@@ -11,6 +11,17 @@ export type EbookCreateRequestType = {
 }
 
 
+// update 
+export type EbookUpdateRequestType = {
+    name?: string;
+    price?: number;
+    stock?: number;
+    about?: string;
+    author?: string;
+    genres?: number[] | null;
+}
+
+
 // response 
 export type EbookResponseType = {
     id_ebook: number;
