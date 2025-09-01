@@ -8,6 +8,19 @@ export type AdminCreateRequestType = {
 }
 
 
+// update 
+export type AdminUpdateRequestType = {
+    name?: string,
+    email?: string
+}
+
+// update password 
+export type AdminUpdatePasswordRequestType = {
+    passwordOld: string,
+    passwordNew: string,
+    confirmPasswordNew: string
+}
+
 // admin sign in 
 export type AdminSigninRequestType = {
     email: string,
