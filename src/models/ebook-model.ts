@@ -1,5 +1,11 @@
 import { Ebook } from "../generated/prisma";
 
+
+// params type 
+export type EbookParamsType = {
+    id_ebook: number;
+}
+
 // create 
 export type EbookCreateRequestType = {
     name: string;

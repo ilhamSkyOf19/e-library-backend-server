@@ -2,6 +2,7 @@ import { includes } from "zod";
 import prisma from "../lib/prismaClient";
 import { EbookCreateRequestType, EbookResponseDataType, EbookResponseDetailType, EbookResponseType, EbookUpdateRequestType, toEbookResponse, toEbookResponseDetail, toResponseEbookData } from "../models/ebook-model";
 import { FileService } from "./file.service";
+import { PrismaClientInitializationError } from "../generated/prisma/runtime/library";
 
 export class EbookService {
     // get All
@@ -16,6 +17,25 @@ export class EbookService {
 
         return response.map(toEbookResponseDetail);
     }
+
+    // get detail 
+    static async getDetail(id_ebook: number): Promise<EbookResponseDetailType> {
+        const response = await prisma.ebook.findUniqueOrThrow({
+            where: { id_ebook: id_ebook },
+            include: {
+                ebookGenres: {
+                    include: { genre: true }
+                }
+            }
+        })
+
+        // cek response
+        if (!response) throw new Error("Ebook not found asdsa");
+
+        return toEbookResponseDetail(response);
+    }
+
+
     // create 
     static async create(req: EbookCreateRequestType, cover: string): Promise<EbookResponseType> {
 
@@ -48,7 +68,7 @@ export class EbookService {
 
     // get 
     static async getData(id_ebook: number): Promise<EbookResponseDataType> {
-        const response = await prisma.ebook.findUnique({
+        const response = await prisma.ebook.findUniqueOrThrow({
             where: { id_ebook: id_ebook },
             include: {
                 ebookGenres: {
@@ -57,7 +77,6 @@ export class EbookService {
             }
         });
 
-        if (!response) throw new Error("Ebook not found");
 
         return toResponseEbookData(response);
     }

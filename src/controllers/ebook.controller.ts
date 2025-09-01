@@ -32,6 +32,36 @@ export class EbookController {
         }
     }
 
+
+    // get by id
+    static async getDetail(req: Request<{ id: string }>, res: Response<ResponseType<EbookResponseDetailType>>, next: NextFunction) {
+        try {
+            // get params 
+            const { id } = req.params;
+
+            // response 
+            const response = await EbookService.getDetail(Number(id));
+
+
+            // return response
+            return res.status(200).json({
+                success: true,
+                data: response
+            })
+        } catch (error) {
+            console.log(error)
+            // cek response prisma 
+            if (error instanceof PrismaClientKnownRequestError) {
+                return next(error);
+            }
+
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
     // create
     static async create(req: TokenRequest<{}, {}, EbookCreateRequestType>, res: Response<ResponseType<EbookResponseType>>) {
         try {

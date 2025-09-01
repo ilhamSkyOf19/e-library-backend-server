@@ -1,5 +1,5 @@
 import z, { email, ZodType } from "zod";
-import { EbookCreateRequestType, EbookUpdateRequestType } from "../models/ebook-model";
+import { EbookCreateRequestType, EbookParamsType, EbookUpdateRequestType } from "../models/ebook-model";
 
 export class EbookValidation {
     // create 
@@ -22,4 +22,10 @@ export class EbookValidation {
         author: z.string().min(3, "author is required").optional(),
         genres: z.array(z.number()).min(1, "genres is required").optional(),
     }).strict() satisfies ZodType<EbookUpdateRequestType>
+
+
+    // get by id 
+    static readonly GET_BY_ID = z.object({
+        id_ebook: z.string().min(1, "id_ebook is required"),
+    }).strict() satisfies ZodType<{ id_ebook: string }>
 }
