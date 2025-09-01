@@ -4,7 +4,7 @@ import { ResponseType } from "../types/response-type";
 import jwt from "jsonwebtoken";
 
 
-export const tokenMiddleware = (role: 'admin' | 'customer'): RequestHandler => {
+export const tokenMiddleware = (role: 'admin' | 'customer' | 'all'): RequestHandler => {
     return (
         req: TokenRequest,
         res: Response<ResponseType<{ message: string }>>,
@@ -20,11 +20,13 @@ export const tokenMiddleware = (role: 'admin' | 'customer'): RequestHandler => {
             // get payload
             const payload = jwt.verify(token, process.env.JWT_SECRET || "") as JwtPayloadGlobal;
 
-            // cek payload
-            if (role === "admin") {
-                if (payload.role !== "ADMIN") return res.status(401).json({ success: false, message: "Unauthorized" });
-            } else {
-                if (payload.role !== "CUSTOMER") return res.status(401).json({ success: false, message: "Unauthorized" });
+            if (role !== "all") {
+                // cek payload
+                if (role === "admin") {
+                    if (payload.role !== "ADMIN") return res.status(401).json({ success: false, message: "Unauthorized" });
+                } else {
+                    if (payload.role !== "CUSTOMER") return res.status(401).json({ success: false, message: "Unauthorized" });
+                }
             }
 
 

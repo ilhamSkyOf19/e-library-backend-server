@@ -35,6 +35,42 @@ export type EbookResponseType = {
 }
 
 
+// response 
+export type EbookResponseDetailType = {
+    id_ebook: number;
+    name: string;
+    price: number;
+    stock: number;
+    about: string;
+    author: string;
+    cover: string;
+    genres: {
+        id_genre: number;
+        name: string
+    }[];
+}
+
+
+
+
+// to response  detail
+export const toEbookResponseDetail = (data: Ebook & {
+    ebookGenres: { genre: { id_genre: number; name: string } }[]
+}): EbookResponseDetailType => {
+    return {
+        id_ebook: data.id_ebook,
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+        about: data.about,
+        author: data.author,
+        cover: data.cover,
+        genres: data.ebookGenres.map(eg => ({
+            id_genre: eg.genre.id_genre,
+            name: eg.genre.name
+        })),
+    }
+}
 
 
 // to response 

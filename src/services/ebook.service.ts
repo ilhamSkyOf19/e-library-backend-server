@@ -1,9 +1,21 @@
 import { includes } from "zod";
 import prisma from "../lib/prismaClient";
-import { EbookCreateRequestType, EbookResponseDataType, EbookResponseType, EbookUpdateRequestType, toEbookResponse, toResponseEbookData } from "../models/ebook-model";
+import { EbookCreateRequestType, EbookResponseDataType, EbookResponseDetailType, EbookResponseType, EbookUpdateRequestType, toEbookResponse, toEbookResponseDetail, toResponseEbookData } from "../models/ebook-model";
 import { FileService } from "./file.service";
 
 export class EbookService {
+    // get All
+    static async getAll(): Promise<EbookResponseDetailType[]> {
+        const response = await prisma.ebook.findMany({
+            include: {
+                ebookGenres: {
+                    include: { genre: true }
+                }
+            }
+        })
+
+        return response.map(toEbookResponseDetail);
+    }
     // create 
     static async create(req: EbookCreateRequestType, cover: string): Promise<EbookResponseType> {
 

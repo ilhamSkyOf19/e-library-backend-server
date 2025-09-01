@@ -1,5 +1,5 @@
-import { Response, Request } from "express";
-import { EbookCreateRequestType, EbookResponseType, type EbookUpdateRequestType } from "../models/ebook-model";
+import { Response, Request, NextFunction } from "express";
+import { EbookCreateRequestType, EbookResponseDetailType, EbookResponseType, toResponseEbookData, type EbookUpdateRequestType } from "../models/ebook-model";
 import { TokenRequest } from "../types/jwt-type";
 import { ResponseType } from "../types/response-type";
 import { EbookService } from "../services/ebook.service";
@@ -7,8 +7,30 @@ import validationService from "../services/validation.service";
 import { EbookValidation } from "../validation/ebook-validation";
 import { FileService } from "../services/file.service";
 import prisma from "../lib/prismaClient";
+import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/library";
 
 export class EbookController {
+
+    // get all ebook 
+    static async getAll(_: Request, res: Response<ResponseType<EbookResponseDetailType[]>>, next: NextFunction) {
+        try {
+            const response = await EbookService.getAll();
+
+            return res.status(200).json({
+                success: true,
+                data: response
+            })
+        } catch (error) {
+            console.log(error)
+            if (error instanceof PrismaClientKnownRequestError) {
+                return next(error);
+            }
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Server Error'
+            })
+        }
+    }
 
     // create
     static async create(req: TokenRequest<{}, {}, EbookCreateRequestType>, res: Response<ResponseType<EbookResponseType>>) {
