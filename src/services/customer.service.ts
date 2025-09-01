@@ -1,6 +1,6 @@
 import prisma from "../lib/prismaClient";
 import bcrypt from "bcrypt";
-import { CustomerCreateRequestType, CustomerEditRequestType, CustomerLoginRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
+import { CustomerCreateRequestType, CustomerEditRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
 
 export class CustomerService {
     // get all
@@ -16,7 +16,6 @@ export class CustomerService {
             }
         });
 
-        console.log(response.map(toCustomerResponse));
 
         // response 
         return response.map(toCustomerResponse);

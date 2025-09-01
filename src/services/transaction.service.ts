@@ -18,6 +18,7 @@ export class TransactionService {
         // set transaction
         const transaction = await prisma.transaction.create({
             data: {
+                id_transaction: Math.floor(Math.random() * 100),
                 id_customer: req.id_user,
                 id_ebook: req.id_ebook,
                 status: "PENDING"
@@ -57,7 +58,11 @@ export class TransactionService {
         })
 
         // handle error 
-        if (!response.ok) throw new Error(`Failed to create transaction, status: ${response.status}`);
+        if (!response.ok) {
+            const errorResponse = await response.text(); // Capture error response body
+            console.error("Midtrans API error:", errorResponse);
+            throw new Error(`Failed to create transaction, status: ${response.status}, response: ${errorResponse}`);
+        }
 
         // return response
         return response.json()

@@ -1,13 +1,14 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { TokenRequest } from "../types/jwt-type"
 import { MidtransUrl, TransactionRequestType } from "../models/transaction-model"
 import { EbookService } from "../services/ebook.service";
 import { TransactionService } from "../services/transaction.service";
+import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/library";
 
 
 
 
-export const paymentController = async (req: TokenRequest<{}, {}, TransactionRequestType>, res: Response<MidtransUrl>) => {
+export const paymentController = async (req: TokenRequest<{}, {}, TransactionRequestType>, res: Response<MidtransUrl>, next: NextFunction) => {
     try {
         // get body
         const id_ebook = req.body.id_ebook;
@@ -45,6 +46,9 @@ export const paymentController = async (req: TokenRequest<{}, {}, TransactionReq
 
     } catch (error) {
         console.log(error);
+        if (error instanceof PrismaClientKnownRequestError) {
+            return next(error);
+        }
         return res.status(500).json({ message: "Internal Server Error" } as any);
     }
 }

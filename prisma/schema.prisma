@@ -66,7 +66,7 @@ enum Status {
 }
 
 model Transaction {
-  id_transaction Int    @id @default(autoincrement())
+  id_transaction Int    @id @unique @default(autoincrement())
   id_customer    Int
   id_ebook       Int
   status         Status @default(PENDING)

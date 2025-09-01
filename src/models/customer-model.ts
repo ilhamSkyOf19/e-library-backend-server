@@ -73,7 +73,7 @@ export const toCustomerResponse = (
                 id_ebook: number,
                 name: string
             },
-            status: 'SUCCESS' | 'PANDING' | 'CANCELLED'
+            status: 'SUCCESS' | 'PENDING' | 'CANCELLED'
         }[]
     }): CustomerResponseType => {
     return {
