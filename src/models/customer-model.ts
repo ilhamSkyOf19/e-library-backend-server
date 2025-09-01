@@ -66,16 +66,28 @@ export type CustomerResponseType = {
 
 
 // to response
-export const toCustomerResponse = (customer: Customer & { transactions: { ebook: { id_ebook: number, name: string } }[] }): CustomerResponseType => {
+export const toCustomerResponse = (
+    customer: Customer & {
+        transactions: {
+            ebook: {
+                id_ebook: number,
+                name: string
+            },
+            status: 'SUCCESS' | 'PANDING' | 'CANCELLED'
+        }[]
+    }): CustomerResponseType => {
     return {
         id: customer.id_customer,
         name: customer.name,
         email: customer.email,
         username: customer.username,
         role: 'CUSTOMER',
-        ebooks: customer.transactions ? customer.transactions.map(e => ({
-            id_ebook: e.ebook.id_ebook,
-            name: e.ebook.name
-        })) : [],
+        ebooks: customer.transactions
+            ? customer.transactions.filter((transaction) => transaction.status === 'SUCCESS')
+                .map(e => ({
+                    id_ebook: e.ebook.id_ebook,
+                    name: e.ebook.name
+                }))
+            : [],
     }
 }
