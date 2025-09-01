@@ -6,6 +6,31 @@ import { ResponseType } from "../types/response-type";
 import { AuthService } from "../services/auth.service";
 
 export class AdminController {
+    // get all
+    static async getAll(_: Request, res: Response<ResponseType<AdminResponseType[]>>, next: NextFunction) {
+        try {
+            // get response 
+            const response = await AdminService.getAll();
+
+            // return response
+            return res.status(200).json({
+                success: true,
+                data: response
+            })
+        } catch (error) {
+            console.log(error);
+            if (error instanceof PrismaClientKnownRequestError) {
+                return next(error);
+            }
+
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
+
     // sign up 
     static async signup(req: Request<{}, {}, AdminCreateRequestType>, res: Response<ResponseType<AdminResponseType>>, next: NextFunction) {
         try {

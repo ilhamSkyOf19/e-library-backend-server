@@ -3,6 +3,15 @@ import { AdminCreateRequestType, AdminRawResponseType, AdminResponseType, toAdmi
 import bcrypt from "bcrypt";
 
 export class AdminService {
+
+    // get all 
+    static async getAll(): Promise<AdminResponseType[]> {
+        // response 
+        const response = await prisma.admin.findMany();
+
+        // response 
+        return response.map(toAdminResponse);
+    }
     // create /  singup
     static async create(req: AdminCreateRequestType): Promise<AdminResponseType> {
         //  hash password

@@ -10,6 +10,7 @@ import paymentRoutes from './routes/payment.route';
 import customerRoute from './routes/customer.route';
 import { errorDbHandler } from './middlewares/error-db';
 import genreRouter from './routes/genre.route';
+import adminRoute from './routes/admin.route';
 
 
 // port 
@@ -39,6 +40,9 @@ app.get('/', (_: Request, res: Response) => {
 app.get('/api/payment/succes', (_: Request, res: Response) => {
     res.send('Success!');
 })
+
+// admin 
+app.use('/api/admin', adminRoute);
 
 // auth route
 app.use('/api/auth', authRoute);
