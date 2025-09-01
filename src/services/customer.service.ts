@@ -3,6 +3,26 @@ import bcrypt from "bcrypt";
 import { CustomerCreateRequestType, CustomerEditRequestType, CustomerLoginRequestType, CustomerRawResponseType, CustomerResponseType, toCustomerResponse } from "../models/customer-model";
 
 export class CustomerService {
+    // get all
+    static async getAll(): Promise<CustomerResponseType[]> {
+        // response 
+        const response = await prisma.customer.findMany({
+            include: {
+                transactions: {
+                    include: {
+                        ebook: true
+                    }
+                }
+            }
+        });
+
+        console.log(response.map(toCustomerResponse));
+
+        // response 
+        return response.map(toCustomerResponse);
+    }
+
+
     // create 
     static async create(req: CustomerCreateRequestType): Promise<CustomerResponseType> {
 
@@ -13,7 +33,15 @@ export class CustomerService {
             {
                 data: {
                     ...req,
-                    password: hashedPassword
+                    password: hashedPassword,
+                    role: 'CUSTOMER'
+                },
+                include: {
+                    transactions: {
+                        include: {
+                            ebook: true
+                        }
+                    }
                 }
             }
         );

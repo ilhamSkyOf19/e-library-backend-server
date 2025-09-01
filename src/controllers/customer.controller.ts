@@ -196,4 +196,25 @@ export class CustomerController {
             })
         }
     }
+
+
+    // get customer for admin 
+    static async getAll(_: Request, res: Response<ResponseType<CustomerResponseType[]>>) {
+        try {
+            // response 
+            const response = await CustomerService.getAll();
+
+            // response 
+            return res.status(200).json({
+                success: true,
+                data: response
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
+        }
+    }
 }

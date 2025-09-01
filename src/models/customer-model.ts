@@ -58,18 +58,24 @@ export type CustomerResponseType = {
     email: string;
     username: string;
     role: 'CUSTOMER';
-    ebooks?: number[]
+    ebooks?: {
+        id_ebook: number
+        name: string
+    }[]
 }
 
 
 // to response
-export const toCustomerResponse = (customer: Customer & { ebooks?: { id_ebook: number }[] }): CustomerResponseType => {
+export const toCustomerResponse = (customer: Customer & { transactions: { ebook: { id_ebook: number, name: string } }[] }): CustomerResponseType => {
     return {
         id: customer.id_customer,
         name: customer.name,
         email: customer.email,
         username: customer.username,
         role: 'CUSTOMER',
-        ebooks: customer.ebooks ? customer.ebooks.map(e => e.id_ebook) : [],
+        ebooks: customer.transactions ? customer.transactions.map(e => ({
+            id_ebook: e.ebook.id_ebook,
+            name: e.ebook.name
+        })) : [],
     }
 }

@@ -8,6 +8,9 @@ import { CustomerValidation } from "../validation/customer-validation";
 const customerRoute: Router = express.Router();
 
 
+// get all customer 
+customerRoute.get('/', tokenMiddleware('admin'), CustomerController.getAll)
+
 // edit 
 customerRoute.patch('/edit', tokenMiddleware('customer'), validationMiddleware(CustomerValidation.EDIT), CustomerController.edit)
 

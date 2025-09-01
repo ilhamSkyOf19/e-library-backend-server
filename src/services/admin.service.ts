@@ -11,7 +11,8 @@ export class AdminService {
         const response = await prisma.admin.create({
             data: {
                 ...req,
-                password: hashedPassword
+                password: hashedPassword,
+                role: 'ADMIN'
             }
         });
 
