@@ -9,7 +9,6 @@ import ebookRoute from './routes/ebook.route';
 import paymentRoutes from './routes/payment.route';
 import customerRoute from './routes/customer.route';
 import { errorDbHandler } from './middlewares/error-db';
-import { EbookController } from './controllers/ebook.controller';
 import { EbookService } from './services/ebook.service';
 import genreRouter from './routes/genre.route';
 
@@ -37,8 +36,12 @@ app.get('/', (_: Request, res: Response) => {
 });
 
 // get ebook
-app.get('/api/ebook', async (_: Request, res: Response) => {
-    const response = await EbookService.getData(2);
+app.get('/api/ebook/:id', async (req: Request, res: Response) => {
+
+    // get params 
+    const { id } = req.params;
+
+    const response = await EbookService.getData(Number(id));
 
     return res.status(200).json({
         success: true,

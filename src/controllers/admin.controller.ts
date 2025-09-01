@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AdminSigninRequestType, type AdminCreateRequestType, type AdminResponseType } from "../models/admin-model";
 import { AdminService } from "../services/admin.service";
 import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/library";
@@ -7,7 +7,7 @@ import { AuthService } from "../services/auth.service";
 
 export class AdminController {
     // sign up 
-    static async signup(req: Request<{}, {}, AdminCreateRequestType>, res: Response<ResponseType<AdminResponseType>>) {
+    static async signup(req: Request<{}, {}, AdminCreateRequestType>, res: Response<ResponseType<AdminResponseType>>, next: NextFunction) {
         try {
             // get body
             const body = req.body;
@@ -25,14 +25,7 @@ export class AdminController {
             console.log(error)
             // error prisma 
             if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === "P2002") {
-                    if (error.meta?.target === "admin_email_key") {
-                        return res.status(500).json({
-                            success: false,
-                            message: "email already exists"
-                        });
-                    }
-                }
+                return next(error);
             }
 
             return res.status(500).json({
