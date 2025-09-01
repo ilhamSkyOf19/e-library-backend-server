@@ -76,6 +76,14 @@ export class EbookController {
                 })
             }
 
+            // cek file 
+            if (req.file === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: "File is required"
+                })
+            }
+
 
             // genres array 
             const genresArray = JSON.parse(req.body.genres.toString());

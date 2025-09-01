@@ -26,6 +26,10 @@ export class EbookValidation {
 
     // get by id 
     static readonly GET_BY_ID = z.object({
-        id_ebook: z.string().min(1, "id_ebook is required"),
-    }).strict() satisfies ZodType<{ id_ebook: string }>
+        id: z.preprocess((val) => {
+            const id = Number(val)
+            if (isNaN(id)) return undefined;
+            return id;
+        }, z.number().min(1, "id is required")),
+    }).strict() satisfies ZodType<EbookParamsType>
 }

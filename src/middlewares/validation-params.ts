@@ -9,6 +9,7 @@ export const validationParams = (schema: ZodType) => {
             schema.parse(req.params);
             next();
         } catch (error) {
+            console.log(error)
             // cek errors
             if (error instanceof ZodError) {
                 const errorMessages = error.issues.map((err) => err.message)[0];

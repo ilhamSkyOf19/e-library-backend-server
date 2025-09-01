@@ -1,8 +1,8 @@
-import { includes } from "zod";
 import prisma from "../lib/prismaClient";
 import { EbookCreateRequestType, EbookResponseDataType, EbookResponseDetailType, EbookResponseType, EbookUpdateRequestType, toEbookResponse, toEbookResponseDetail, toResponseEbookData } from "../models/ebook-model";
 import { FileService } from "./file.service";
-import { PrismaClientInitializationError } from "../generated/prisma/runtime/library";
+import path from "path";
+
 
 export class EbookService {
     // get All
@@ -15,7 +15,16 @@ export class EbookService {
             }
         })
 
-        return response.map(toEbookResponseDetail);
+        // path 
+        const pathname = path.join(__dirname, "..", "..", "public", "uploads", "cover");
+
+        // file with path
+        const fileWihtPathname = response.map(ebook => ({
+            ...ebook,
+            cover: path.join(pathname, ebook.cover)
+        }));
+
+        return fileWihtPathname.map(toEbookResponseDetail);
     }
 
     // get detail 
@@ -31,6 +40,14 @@ export class EbookService {
 
         // cek response
         if (!response) throw new Error("Ebook not found asdsa");
+
+
+        // path 
+        const pathname = path.join(__dirname, "..", "..", "public", "uploads", "cover");
+
+        // file with path
+        response.cover = path.join(pathname, response.cover);
+
 
         return toEbookResponseDetail(response);
     }
