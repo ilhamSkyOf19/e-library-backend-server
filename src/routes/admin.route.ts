@@ -3,6 +3,7 @@ import { tokenMiddleware } from "../middlewares/token-middleware";
 import { AdminController } from "../controllers/admin.controller";
 import { validationMiddleware } from "../middlewares/validation-middleware";
 import { AdminValidation } from "../validation/admin-validation";
+import { CustomerValidation } from "../validation/customer-validation";
 
 const adminRoute: Router = express.Router();
 
@@ -20,5 +21,6 @@ adminRoute.patch('/self-update', tokenMiddleware('admin'), validationMiddleware(
 // update password 
 adminRoute.put('/update-password', tokenMiddleware('admin'), validationMiddleware(AdminValidation.UPDATE_PASSWORD), AdminController.updatePassword)
 
-
+// update customer by id 
+adminRoute.put('/update-customer/:id', tokenMiddleware('admin'), validationMiddleware(CustomerValidation.EDIT), AdminController.updateCustomerById)
 export default adminRoute;

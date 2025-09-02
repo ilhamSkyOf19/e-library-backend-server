@@ -5,6 +5,7 @@ import { PrismaClientKnownRequestError } from "../generated/prisma/runtime/libra
 import { ResponseType } from "../types/response-type";
 import { AuthService } from "../services/auth.service";
 import { TokenRequest } from "../types/jwt-type";
+import { CustomerEditRequestType, CustomerResponseType } from "../models/customer-model";
 
 export class AdminController {
     // get self 
@@ -208,6 +209,46 @@ export class AdminController {
                 }
             })
 
+
+        } catch (error) {
+            console.log(error);
+            if (error instanceof PrismaClientKnownRequestError) {
+                return next(error);
+            }
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
+    // update customer 
+    static async updateCustomerById(req: Request<{ id: string }, {}, CustomerEditRequestType>, res: Response<ResponseType<CustomerResponseType | { message: string }>>, next: NextFunction) {
+        try {
+            // get params 
+            const { id } = req.params;
+
+            // get body 
+            const body = req.body;
+
+
+            // response 
+            const response = await AdminService.updateCUstomerById(body, Number(id));
+
+
+            //  cek response 
+            if (!response.success) {
+                return res.status(400).json({
+                    success: false,
+                    message: response.message
+                })
+            }
+
+            // return response 
+            return res.status(200).json({
+                success: true,
+                data: response.data
+            })
 
         } catch (error) {
             console.log(error);

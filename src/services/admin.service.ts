@@ -1,6 +1,10 @@
 import prisma from "../lib/prismaClient";
 import { AdminCreateRequestType, AdminRawResponseType, AdminResponseType, AdminUpdatePasswordRequestType, AdminUpdateRequestType, toAdminResponse } from "../models/admin-model";
 import bcrypt from "bcrypt";
+import { CustomerEditRequestType, CustomerResponseType } from "../models/customer-model";
+import { CustomerService } from "./customer.service";
+import { success } from "zod";
+import { ResponseType } from "../types/response-type";
 
 export class AdminService {
 
@@ -106,6 +110,51 @@ export class AdminService {
         return {
             success: true,
             message: "Password updated successfully"
+        };
+
+    }
+
+
+    // update customer by id 
+    static async updateCUstomerById(req: CustomerEditRequestType, id: number): Promise<ResponseType<CustomerResponseType | { message: string }>> {
+        // find customer 
+        const customer = await prisma.customer.findUniqueOrThrow({ where: { id_customer: id } });
+
+        // cek customer
+        if (!customer) {
+            return {
+                success: false,
+                message: "customer not found"
+            }
+        }
+
+        // cek value req
+        if (!req.name && !req.email && !req.username) return {
+            success: true,
+            data: {
+                message: "customer not updated"
+            }
+        }
+
+
+        // cek body same
+        const isDataSame = Object.keys(req).every(key => req[key as keyof CustomerEditRequestType] === customer[key as keyof CustomerEditRequestType]);
+
+        // cek same 
+        if (isDataSame) return {
+            success: true,
+            data: {
+                message: "customer not updated, data is the same"
+            }
+        }
+
+        // update customer 
+        const response = await CustomerService.edit(Number(id), req);
+
+        // return response 
+        return {
+            success: true,
+            data: response
         };
 
     }

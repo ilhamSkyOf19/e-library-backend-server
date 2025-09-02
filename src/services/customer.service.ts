@@ -70,6 +70,7 @@ export class CustomerService {
         // cek user
         const findCustomer = await this.findById(id);
 
+        // find customer
         if (!findCustomer) {
             return { success: false, message: "customer not found" };
         }
